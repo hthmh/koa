@@ -5,7 +5,7 @@
   "main": "index.js",
   "engines": {
     "node": "9.4.0"
-  }, 
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fs": "^0.0.1-security",
+    "co-fs": "^1.2.0",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-cors": "^0.0.16",
