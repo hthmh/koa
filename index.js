@@ -11,8 +11,8 @@ app.use(cors());
 
 const getQuery = new Router(); //直接返回get参数
 getQuery.get('/getquery', (ctx, next) => {
-    ctx.body = ctx.query
-})
+    ctx.body = ctx.query;
+});
 
 const ddd = {
     "znbm": [
@@ -5718,9 +5718,14 @@ getData.get('/area', async(ctx, next) => {
     ctx.body = ddd;
 })
 
+const NotFound = new Router();
+NotFound.get('/', (ctx, next) => {
+    ctx.body = '地址错误';
+})
 const router = new Router();
 router.use(getQuery.routes(), getQuery.allowedMethods());
 router.use('/get', getData.routes(), getData.allowedMethods());
+router.use(NotFound.routes(), NotFound.allowedMethods());
 
 async function readFile(name) {
     let rData = await fs.readFile(`./json/${name}.json`, 'utf8', function (err, data) {
