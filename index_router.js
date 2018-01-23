@@ -2,7 +2,6 @@ const Koa = require('koa');
 const app = new Koa();
 const bodyParser = require('koa-bodyparser');
 const Router = require('koa-router');
-var fs = require('fs');
 
 app.use(bodyParser());
 
