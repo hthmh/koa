@@ -27,7 +27,7 @@ Router1.get('/query', function (ctx, next) {
 const NotFound = new Router();
 NotFound.get('/', (ctx, next) => {
   if (ctx.url == '/') {
-    ctx.body = '';
+    ctx.body = 'koa server';
   } else {
     ctx.body = '404'
   }
