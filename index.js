@@ -2,53 +2,65 @@ const Koa = require('koa');
 const app = new Koa();
 const bodyParser = require('koa-bodyparser');
 const Router = require('koa-router');
-var fs = require('co-fs');
 
+const utils = require('./utils/index')
 app.use(bodyParser());
 
-const cors = require('koa-cors');
-app.use(cors());
+//设置跨域
+/* const cors = require('koa-cors');
+app.use(cors()); */
+
+app.use(async function (ctx, next) {
+  ctx
+    .res
+    .setHeader("Access-Control-Allow-Origin", "*")
+  // ctx.res.setHeader("Access-Control-Allow-Origin", "http://localhost:33")
+  await next()
+})
 
 const getQuery = new Router(); //直接返回get参数
-getQuery.get('/getquery', (ctx, next) => {
-    ctx.body = ctx.query;
+getQuery.get('/query', (ctx, next) => {
+  ctx.body = ctx.query;
 });
 
-const readFile = new Router();
-readFile.get('/area', function * (ctx, next) {
-    let data = yield fs.readFile('./json/area.json', 'utf8');
-    this.body = data;
+const getFile = new Router();
+getFile.get('/json', async function (ctx, next) {
+  let name = ctx.query.name;
+  res = ctx.body = await utils.readFile(name);
 })
+  .get('/write', async function (ctx, next) {
+    let params = ctx.query;
+    if (params.name && params.password) {
+      ctx.body = await utils.writeFile('user', {
+        name: params.name,
+        password: params.password
+      });
+    } else {
+      ctx.body = {
+        status: 0,
+        msg: "缺少参数"
+      }
+    }
+
+  })
 
 const NotFound = new Router();
 NotFound.get('/', (ctx, next) => {
-    ctx.body = '地址错误';
+  ctx.body = {
+    status: 0,
+    msg: null
+  };
 })
 const router = new Router();
 router.use(getQuery.routes(), getQuery.allowedMethods());
-router.use('/file', readFile.routes(), readFile.allowedMethods());
+router.use(getFile.routes(), getFile.allowedMethods());
 router.use(NotFound.routes(), NotFound.allowedMethods());
 
-function readFile(name) {
-    fs
-        .readFile(`./json/${name}.json`, 'utf8', function (err, data) {
-            if (err) {
-                console.log(err)
-                rData = 123;
-            } else {
-                rData = JSON.parse(data);
-                console.log(111)
-            }
-
-        });
-    console.log(rData);
-}
-
 app
-    .use(router.routes())
-    .use(router.allowedMethods());
+  .use(router.routes())
+  .use(router.allowedMethods());
 
 let serverPort = process.env.PORT || 3000;
 app.listen(serverPort, () => {
-    console.log(`port http://127.0.0.1:${serverPort}`);
+  console.log(`port http://127.0.0.1:${serverPort}`);
 })
