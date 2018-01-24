@@ -2,13 +2,10 @@ const Router = require('koa-router');
 const utils = require('../utils/index');
 
 const Router1 = new Router();
-Router1.get('/query', function (ctx, next) {
-  ctx.body = ctx.query;
+Router1.get('/json', async function (ctx, next) {
+  let name = ctx.query.name;
+  res = ctx.body = await utils.readFile(name);
 })
-  .get('/json', async function (ctx, next) {
-    let name = ctx.query.name;
-    res = ctx.body = await utils.readFile(name);
-  })
   .post('/write', async function (ctx, next) {
     let params = ctx.request.body;
     if (params.name && params.password) {
@@ -24,6 +21,13 @@ Router1.get('/query', function (ctx, next) {
     }
   })
 
+const Test = new Router();
+Test.get('/get', (ctx, next) => {
+  ctx.body = ctx.query;
+}).post('/post', (ctx, next) => {
+  ctx.body = ctx.request.body;
+})
+
 const NotFound = new Router();
 NotFound.get('/', (ctx, next) => {
   if (ctx.url == '/') {
@@ -35,6 +39,7 @@ NotFound.get('/', (ctx, next) => {
 
 const router = new Router();
 router.use(Router1.routes(), Router1.allowedMethods());
+router.use(Test.routes(), Test.allowedMethods());
 router.use(NotFound.routes(), NotFound.allowedMethods());
 
 module.exports = router;
