@@ -25,6 +25,7 @@ const Test = new Router();
 Test.get('/get', (ctx, next) => {
   ctx.body = ctx.query;
 }).post('/post', (ctx, next) => {
+  console.log(ctx.request)
   ctx.body = ctx.request.body;
 }).get('/', (ctx, next) => {
   if (ctx.url == '/') {

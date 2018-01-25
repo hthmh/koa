@@ -1,21 +1,20 @@
 const Koa = require('koa');
 const app = new Koa();
 const bodyParser = require('koa-bodyparser');
-const myRouter = require('./router/index');
-
 app.use(bodyParser());
 
+const myRouter = require('./router/index');
 //设置跨域
-/* const cors = require('koa-cors');
-app.use(cors()); */
+const cors = require('koa-cors');
+app.use(cors());
 
-app.use(async function (ctx, next) {
-  ctx
-    .res
-    .setHeader("Access-Control-Allow-Origin", "*")
-  // ctx.res.setHeader("Access-Control-Allow-Origin", "http://localhost:33")
-  await next()
-})
+// app.use(async function (ctx, next) {
+//   ctx
+//     .res
+//     .setHeader("Access-Control-Allow-Origin", "*")
+//   // ctx.res.setHeader("Access-Control-Allow-Origin", "http://localhost:33")
+//   await next()
+// })
 
 app
   .use(myRouter.routes())
