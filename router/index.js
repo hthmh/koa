@@ -1,14 +1,11 @@
 const Router = require('koa-router');
 const utils = require('../utils/index');
 
-const Router1 = new Router();
-Router1.get('/query', function (ctx, next) {
-  ctx.body = ctx.query;
+const File = new Router();
+File.get('/json', async function (ctx, next) {
+  let name = ctx.query.name;
+  res = ctx.body = await utils.readFile(name);
 })
-  .get('/json', async function (ctx, next) {
-    let name = ctx.query.name;
-    res = ctx.body = await utils.readFile(name);
-  })
   .post('/write', async function (ctx, next) {
     let params = ctx.request.body;
     if (params.name && params.password) {
@@ -24,8 +21,12 @@ Router1.get('/query', function (ctx, next) {
     }
   })
 
-const NotFound = new Router();
-NotFound.get('/', (ctx, next) => {
+const Test = new Router();
+Test.get('/get', (ctx, next) => {
+  ctx.body = ctx.query;
+}).post('/post', (ctx, next) => {
+  ctx.body = ctx.request.body;
+}).get('/', (ctx, next) => {
   if (ctx.url == '/') {
     ctx.body = 'koa server';
   } else {
@@ -34,7 +35,7 @@ NotFound.get('/', (ctx, next) => {
 })
 
 const router = new Router();
-router.use(Router1.routes(), Router1.allowedMethods());
-router.use(NotFound.routes(), NotFound.allowedMethods());
+router.use('/file',File.routes(), File.allowedMethods());
+router.use('/test',Test.routes(), Test.allowedMethods());
 
 module.exports = router;
