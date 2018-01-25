@@ -36,6 +36,6 @@ Test.get('/get', (ctx, next) => {
 
 const router = new Router();
 router.use('/file',File.routes(), File.allowedMethods());
-router.use('/test',Test.routes(), Test.allowedMethods());
+router.use(Test.routes(), Test.allowedMethods());
 
 module.exports = router;
